@@ -5,6 +5,8 @@ from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.opera import OperaDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 import time
+from src.pages.yandex_disk_page import YandexDiskPage
+
 
 def pytest_addoption(parser):
     parser.addoption('--browser_name',
@@ -53,5 +55,6 @@ def browser(request):
         raise pytest.UsageError("'--browser_name' should be 'Chrome, Firefox, Opera, Edge or Safari")
 
     yield browser
+    YandexDiskPage(browser, browser.current_url).logout_from_yadidisk()
     time.sleep(3)
     browser.quit()

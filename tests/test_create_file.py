@@ -1,6 +1,6 @@
-from pages.login_page import LoginPage
-from pages.yandex_disk_page import YandexDiskPage
-from src.main_data import MainData
+from src.pages.login_page import LoginPage
+from src.pages.yandex_disk_page import YandexDiskPage
+from src.data.main_data import MainData
 
 # Экземпляр класса нужен для того, чтобы не прописывать обращение напрямую к классу и его атрибутам на случай,
 # если в нём поменяются какие-то данные
@@ -28,15 +28,13 @@ def test_create_file_on_yadisk(browser):
     yadisk_page.create_file(file_type=test_data.file_types['text_doc'], file_name=test_data.file_names[1])
 
     yadisk_page.close_specific_window(window_index=1)  # Закрываем 2 вкладку с файлом
-    browser.switch_to.window(browser.window_handles[0])  # Переключаемся на 1 вкладку и продолжаем работу
+    yadisk_page.switch_to_another_window(window_index=0)  # Переключаемся на 1 вкладку и продолжаем работу
 
     # Ищем последний созданный файл в папке и сверяем его имя. Т.к. у файла появилось расширение .docx, конкатенируем
     # его исходное имя и расширение в одну строку
-    assert (yadisk_page.get_attribute_value(yadisk_page.LAST_ITEM, 'aria-label')
-            == test_data.file_names[1] + test_data.file_extensions[1]),\
-            "Файл с таким именем не был найден"
+    yadisk_page.check_file_names(test_data.file_names[1] + test_data.file_extensions[1])
 
-    yadisk_page.logout_from_yadidisk()
+    # yadisk_page.logout_from_yadidisk()
 
 
 # Задание со *
@@ -65,13 +63,12 @@ def test_upload_file_and_check_content(browser):
     yadisk_page.is_element_clickable(yadisk_page.SELECTED_ITEM)
     yadisk_page.press_enter(yadisk_page.SELECTED_ITEM)
 
-    browser.switch_to.window(browser.window_handles[1])  # Переключаемся на вкладку с содержимым файла
+    yadisk_page.switch_to_another_window(window_index=1)  # Переключаемся на вкладку с содержимым файла
 
-    assert (yadisk_page.get_element_text(yadisk_page.OPENED_FILE_TEXT)
-            == yadisk_page.get_local_file_content(test_data.local_files_data['txt_file_path'])),\
-            "Текст файла в браузере не совпадает с текстом в локальном файле"
+    # Считываем текст в открытом файле и проверяем его соответствие тексту в локальном файле
+    yadisk_page.check_opened_file_text(yadisk_page.get_local_file_content(test_data.local_files_data['txt_file_path']))
 
     browser.switch_to.window(browser.window_handles[0])
     yadisk_page.click_on_element(yadisk_page.CANCEL_HIGHLIGHT_BUTTON)  # Закрыть окно выделения сверху, нажав на крестик
 
-    yadisk_page.logout_from_yadidisk()
+    # yadisk_page.logout_from_yadidisk()

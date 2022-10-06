@@ -1,6 +1,9 @@
 import time
-from pages.basic_page import BasicPage
+from src.pages.basic_page import BasicPage
+from src.data.main_data import MainData
 from selenium.webdriver.common.by import By
+
+test_data = MainData()
 
 
 class YandexDiskPage(BasicPage):
@@ -55,3 +58,17 @@ class YandexDiskPage(BasicPage):
     def logout_from_yadidisk(self):
         self.click_on_element(self.ACCOUNT_ICON_LINK)
         self.click_on_element(self.LOGOUT_FROM_ACCOUNT_LINK)
+
+    # ========================================================
+    # ПРОВЕРКИ
+    # ========================================================
+
+    # Проверка имени последнего созданного файла на соответствие имени на входе функции
+    def check_file_names(self, comparable_file_name):
+        assert (self.get_attribute_value(self.LAST_ITEM, 'aria-label') == comparable_file_name), \
+            "Файл с таким именем не был найден"
+
+    # Проверка текста в открытом файле с текстом, поданным на вход функции
+    def check_opened_file_text(self, comparable_file_text):
+        assert (self.get_element_text(self.OPENED_FILE_TEXT) == comparable_file_text), \
+            "Текст файла в браузере не совпадает с текстом для сравнения"

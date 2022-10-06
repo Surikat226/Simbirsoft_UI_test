@@ -46,6 +46,10 @@ class BasicPage:
                                                    message=f"Cant find element by locator {locator}!")
         return bool(element)
 
+    # Переключиться на вкладку с определённым индексом. Метод принимает индекс вкладки, на которую нужно перейти
+    def switch_to_another_window(self, window_index):
+        self.browser.switch_to.window(self.browser.window_handles[window_index])
+
     # Закрыть вкладку с определённым индексом. Метод принимает индекс вкладки, которую необходимо закрыть
     def close_specific_window(self, window_index):
         window = self.browser.window_handles[window_index]
