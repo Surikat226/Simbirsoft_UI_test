@@ -22,7 +22,7 @@ def pytest_addoption(parser):
 def browser(request):
     browser_name = request.config.getoption('browser_name')
     selenoid = request.config.getoption("selenoid")
-    if (selenoid == 'true'):
+    if selenoid == 'true':
         desiredCapabilities = {
             "browserName": "chrome",
             "version": "",
@@ -55,6 +55,6 @@ def browser(request):
         raise pytest.UsageError("'--browser_name' should be 'Chrome, Firefox, Opera, Edge or Safari")
 
     yield browser
-    YandexDiskPage(browser, browser.current_url).logout_from_yadidisk()
+    YandexDiskPage(browser, browser.current_url).logout_from_yadisk()  # Разлогиниться
     time.sleep(3)
     browser.quit()

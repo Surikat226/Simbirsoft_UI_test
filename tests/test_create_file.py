@@ -21,8 +21,13 @@ def test_create_file_on_yadisk(browser):
     # Переходим на Яндекс.Диск
     browser.get('https://disk.yandex.ru/client/disk')
     yadisk_page = YandexDiskPage(browser, browser.current_url)
-    yadisk_page.create_file(file_type=test_data.file_types['folder'], file_name=test_data.file_names[0])
-    yadisk_page.click_on_element(yadisk_page.find_item_by_name(test_data.file_names[0]))  # Селектим папку
+    # yadisk_page.create_file(file_type=test_data.file_types['folder'], file_name=test_data.file_names[0])
+
+###################
+    # yadisk_page.click_on_element(yadisk_page.find_item_by_name(test_data.file_names[0]))  # Селектим папку
+    yadisk_page.click_on_element(yadisk_page.find_element_by_attribute_text(yadisk_page.DISK_ITEM, 'aria-label', test_data.file_names[0]))
+###################
+
     # Нажимаем Enter, чтобы попасть в неё. Через double click в Action chains не получилось)
     yadisk_page.press_enter(yadisk_page.SELECTED_ITEM)
     yadisk_page.create_file(file_type=test_data.file_types['text_doc'], file_name=test_data.file_names[1])
@@ -33,8 +38,6 @@ def test_create_file_on_yadisk(browser):
     # Ищем последний созданный файл в папке и сверяем его имя. Т.к. у файла появилось расширение .docx, конкатенируем
     # его исходное имя и расширение в одну строку
     yadisk_page.check_file_names(test_data.file_names[1] + test_data.file_extensions[1])
-
-    # yadisk_page.logout_from_yadidisk()
 
 
 # Задание со *
@@ -70,5 +73,3 @@ def test_upload_file_and_check_content(browser):
 
     browser.switch_to.window(browser.window_handles[0])
     yadisk_page.click_on_element(yadisk_page.CANCEL_HIGHLIGHT_BUTTON)  # Закрыть окно выделения сверху, нажав на крестик
-
-    # yadisk_page.logout_from_yadidisk()

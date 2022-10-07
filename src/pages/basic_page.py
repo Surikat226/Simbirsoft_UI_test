@@ -36,6 +36,11 @@ class BasicPage:
                                                    message=f"Не удалось найти локатор {locator}!")
         return bool(element)
 
+    def find_element_by_attribute_text(self, locator, attribute, text, timeout=5):
+        element = WDW(self.browser, timeout).until(EC.text_to_be_present_in_element_attribute(locator, attribute, text),
+                                                   message=f"Не удалось найти локатор {locator}!")
+        return element
+
     def is_element_not_presented(self, locator, timeout=5):
         element = WDW(self.browser, timeout).until_not(EC.presence_of_element_located(locator),
                                                        message=f"Не удалось найти локатор {locator}!")

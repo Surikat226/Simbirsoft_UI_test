@@ -27,6 +27,9 @@ class YandexDiskPage(BasicPage):
     OPENED_FILE_TEXT = (By.CSS_SELECTOR, 'p.mg1')
     CANCEL_HIGHLIGHT_BUTTON = (By.CSS_SELECTOR, '[aria-label="Отменить выделение"]')
 
+    # DISK_ITEM = (By.XPATH, '//span[@class="clamped-text"]/..')
+    DISK_ITEM = (By.XPATH, '//span[@class="clamped-text"]')
+
     # Создать файл. В качестве аргументов передаются тип создаваемого файла и его имя
     def create_file(self, file_type, file_name):
         self.click_on_element(self.CREATE_BUTTON)
@@ -48,14 +51,21 @@ class YandexDiskPage(BasicPage):
             self.click_on_element(self.CREATE_BUTTON_MODAL_WINDOW)
 
     # Найти айтем (файл/папку) в диске по имени. Также, можно дополнительно ввести формат файла типа .docx, .txt и т.д.
+    # def find_item_by_name(self, item_name, file_format=''):
+    #     item = (By.XPATH,
+    #            f'//div[@class="client-listing"]//div[contains(@class, "listing-item__title")'
+    #            f'and @aria-label="{item_name}{file_format}"]/..')
+    #     return item
+
     def find_item_by_name(self, item_name, file_format=''):
+        elements = self.find_visible_elements(self.DISK_ITEM)
+        for element in elements:
+            if element.text == item_name + file_format:
+                self.click_on_element(element)
+            else:
+                pass
 
-        item = (By.XPATH,
-               f'//div[@class="client-listing"]//div[contains(@class, "listing-item__title") and @aria-label="{item_name}{file_format}"]/..')
-               # f'//div[contains(@class, "listing-item__title") and @aria-label="{item_name}{file_format}"]/..')
-        return item
-
-    def logout_from_yadidisk(self):
+    def logout_from_yadisk(self):
         self.click_on_element(self.ACCOUNT_ICON_LINK)
         self.click_on_element(self.LOGOUT_FROM_ACCOUNT_LINK)
 
