@@ -9,7 +9,6 @@ test_data = MainData()
 class YandexDiskPage(BasicPage):
 
     CREATE_BUTTON = (By.XPATH, '//button//span[text()="Создать"]/..')
-
     # Типы файлов в попапе создания файлов
     CREATE_FOLDER_POPUP = (By.XPATH, '//button//span[text()="Папку"]/..')
     CREATE_TEXT_FILE_POPUP = (By.XPATH, '//button//span[text()="Текстовый документ"]/..')
@@ -26,9 +25,7 @@ class YandexDiskPage(BasicPage):
     ULOAD_FILES_INPUT = (By.CSS_SELECTOR, '[type="file"]')
     OPENED_FILE_TEXT = (By.CSS_SELECTOR, 'p.mg1')
     CANCEL_HIGHLIGHT_BUTTON = (By.CSS_SELECTOR, '[aria-label="Отменить выделение"]')
-
-    # DISK_ITEM = (By.XPATH, '//span[@class="clamped-text"]/..')
-    DISK_ITEM = (By.XPATH, '//span[@class="clamped-text"]')
+    DISK_ITEM = (By.XPATH, '//span[@class="clamped-text"]/..')  # Локатор нескольких элементов (все айтемы на диске)
 
     # Создать файл. В качестве аргументов передаются тип создаваемого файла и его имя
     def create_file(self, file_type, file_name):
@@ -50,24 +47,23 @@ class YandexDiskPage(BasicPage):
         elif file_type == 'Текстовый документ':
             self.click_on_element(self.CREATE_BUTTON_MODAL_WINDOW)
 
-    # Найти айтем (файл/папку) в диске по имени. Также, можно дополнительно ввести формат файла типа .docx, .txt и т.д.
-    # def find_item_by_name(self, item_name, file_format=''):
-    #     item = (By.XPATH,
-    #            f'//div[@class="client-listing"]//div[contains(@class, "listing-item__title")'
-    #            f'and @aria-label="{item_name}{file_format}"]/..')
-    #     return item
+    # Найти айтем на диске по имени и кликнуть по нему
+    def click_on_disk_item(self, item_name):
+        time.sleep(1.5)
+        self.click_on_element(
+            self.find_element_with_specific_text(self.DISK_ITEM, item_name)
+        )
 
-    def find_item_by_name(self, item_name, file_format=''):
-        elements = self.find_visible_elements(self.DISK_ITEM)
-        for element in elements:
-            if element.text == item_name + file_format:
-                self.click_on_element(element)
-            else:
-                pass
-
+    # Выйти из аккаунта
     def logout_from_yadisk(self):
         self.click_on_element(self.ACCOUNT_ICON_LINK)
         self.click_on_element(self.LOGOUT_FROM_ACCOUNT_LINK)
+
+    # Сделать видимым для Selenium инпут для загрузки файлов
+    def make_upload_input_visible(self):
+        self.browser.execute_script(
+            """document.querySelector("[type='file']").classList.remove('upload-button__attach')"""
+        )
 
     # ========================================================
     # ПРОВЕРКИ

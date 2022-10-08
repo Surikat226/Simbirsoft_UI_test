@@ -10,6 +10,7 @@ class LoginPage(BasicPage):
     PASSWORD_INPUT = (By.CSS_SELECTOR, '[id="passp-field-passwd"]')
     AUTH_FORM = (By.CSS_SELECTOR, '[class="passp-auth-content"]')
 
+    # Залогиниться на странице авторизации через форму авторизации
     def login(self, login, password):
         self.is_element_presented(self.EMAIL_DATA_TYPE_BUTTON)
 

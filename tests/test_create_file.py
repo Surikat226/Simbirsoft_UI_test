@@ -1,3 +1,5 @@
+import time
+
 from src.pages.login_page import LoginPage
 from src.pages.yandex_disk_page import YandexDiskPage
 from src.data.main_data import MainData
@@ -21,15 +23,13 @@ def test_create_file_on_yadisk(browser):
     # Переходим на Яндекс.Диск
     browser.get('https://disk.yandex.ru/client/disk')
     yadisk_page = YandexDiskPage(browser, browser.current_url)
-    # yadisk_page.create_file(file_type=test_data.file_types['folder'], file_name=test_data.file_names[0])
+    yadisk_page.create_file(file_type=test_data.file_types['folder'], file_name=test_data.file_names[0])
+    # Селектим папку
+    yadisk_page.click_on_disk_item(item_name=test_data.file_names[0])
 
-###################
-    # yadisk_page.click_on_element(yadisk_page.find_item_by_name(test_data.file_names[0]))  # Селектим папку
-    yadisk_page.click_on_element(yadisk_page.find_element_by_attribute_text(yadisk_page.DISK_ITEM, 'aria-label', test_data.file_names[0]))
-###################
-
-    # Нажимаем Enter, чтобы попасть в неё. Через double click в Action chains не получилось)
+    yadisk_page.is_element_clickable(yadisk_page.SELECTED_ITEM)
     yadisk_page.press_enter(yadisk_page.SELECTED_ITEM)
+
     yadisk_page.create_file(file_type=test_data.file_types['text_doc'], file_name=test_data.file_names[1])
 
     yadisk_page.close_specific_window(window_index=1)  # Закрываем 2 вкладку с файлом
@@ -52,17 +52,17 @@ def test_upload_file_and_check_content(browser):
     browser.get('https://disk.yandex.ru/client/disk')
     yadisk_page = YandexDiskPage(browser, browser.current_url)
     yadisk_page.create_file(file_type=test_data.file_types['folder'], file_name=test_data.file_names[2])
-    yadisk_page.click_on_element(yadisk_page.find_item_by_name(test_data.file_names[2]))
+    yadisk_page.click_on_disk_item(item_name=test_data.file_names[2])
+
+    yadisk_page.is_element_clickable(yadisk_page.SELECTED_ITEM)
     yadisk_page.press_enter(yadisk_page.SELECTED_ITEM)
 
     # Убираем класс у инпута через скрипт JS, чтобы он стал видимым
-    browser.execute_script(
-        """document.querySelector("[type='file']").classList.remove('upload-button__attach')"""
-    )
+    yadisk_page.make_upload_input_visible()
 
     yadisk_page.upload_file(yadisk_page.ULOAD_FILES_INPUT, test_data.local_files_data['txt_file_path'])
-    yadisk_page.click_on_element(yadisk_page.find_item_by_name(item_name=test_data.file_names[3],
-                                                               file_format=test_data.file_extensions[0]))
+    yadisk_page.click_on_disk_item(test_data.file_names[3] + test_data.file_extensions[0])
+
     yadisk_page.is_element_clickable(yadisk_page.SELECTED_ITEM)
     yadisk_page.press_enter(yadisk_page.SELECTED_ITEM)
 
