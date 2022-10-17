@@ -40,7 +40,6 @@ def test_create_file_on_yadisk(browser):
     yadisk_page.check_file_names(test_data.file_names[1] + test_data.file_extensions[1])
 
 
-# Задание со *
 def test_upload_file_and_check_content(browser):
     login_page = LoginPage(browser, url)
 
