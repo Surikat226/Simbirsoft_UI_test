@@ -1,5 +1,3 @@
-import time
-
 from src.pages.login_page import LoginPage
 from src.pages.yandex_disk_page import YandexDiskPage
 from src.data.main_data import MainData
